@@ -79,8 +79,33 @@ async function handleChatRequest(req: Request): Promise<Response> {
             .map((code) => code.trim())
             .filter(Boolean) || []
     if (accessCodes.length > 0) {
-        const accessCodeHeader = req.headers.get("x-access-code")
-        if (!accessCodeHeader || !accessCodes.includes(accessCodeHeader)) {
+        let isValid = false
+
+        // 1. Check auth_token cookie first
+        const cookieHeader = req.headers.get("cookie")
+        if (cookieHeader) {
+            const authCookie = cookieHeader
+                .split(";")
+                .find((c) => c.trim().startsWith("auth_token="))
+            if (authCookie) {
+                const cookieValue = authCookie.split("=")[1]?.trim()
+                if (cookieValue) {
+                    isValid = accessCodes.some(
+                        (code) => cookieValue === `authed_${code}`,
+                    )
+                }
+            }
+        }
+
+        // 2. Fallback to x-access-code header for backward compatibility
+        if (!isValid) {
+            const accessCodeHeader = req.headers.get("x-access-code")
+            if (accessCodeHeader && accessCodes.includes(accessCodeHeader)) {
+                isValid = true
+            }
+        }
+
+        if (!isValid) {
             return Response.json(
                 {
                     error: "Invalid or missing access code. Please configure it in Settings.",
