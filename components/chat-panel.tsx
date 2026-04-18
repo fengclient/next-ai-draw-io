@@ -3,6 +3,7 @@
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
 import {
+    LogOut,
     MessageSquarePlus,
     PanelRightClose,
     PanelRightOpen,
@@ -1356,6 +1357,29 @@ export default function ChatPanel({
                             data-testid="settings-button"
                         >
                             <Settings
+                                className={`${isMobile ? "h-4 w-4" : "h-5 w-5"} text-muted-foreground`}
+                            />
+                        </ButtonWithTooltip>
+                        <ButtonWithTooltip
+                            tooltipContent={
+                                dict.nav.logoutTooltip || dict.nav.logout
+                            }
+                            variant="ghost"
+                            size="icon"
+                            onClick={async () => {
+                                try {
+                                    await fetch("/api/logout", {
+                                        method: "POST",
+                                    })
+                                    router.refresh()
+                                } catch {
+                                    router.refresh()
+                                }
+                            }}
+                            className="hover:bg-accent"
+                            data-testid="logout-button"
+                        >
+                            <LogOut
                                 className={`${isMobile ? "h-4 w-4" : "h-5 w-5"} text-muted-foreground`}
                             />
                         </ButtonWithTooltip>

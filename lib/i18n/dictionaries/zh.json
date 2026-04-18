@@ -18,7 +18,9 @@
         "settings": "设置",
         "hidePanel": "隐藏聊天面板 (Ctrl+B)",
         "showPanel": "显示聊天面板 (Ctrl+B)",
-        "aiChat": "AI 聊天"
+        "aiChat": "AI 聊天",
+        "logout": "退出登录",
+        "logoutTooltip": "退出登录并返回登录页"
     },
     "providers": {
         "useServerDefault": "使用服务器默认值",
